@@ -4,7 +4,7 @@ const { Vendor } = require("../models/Vendors");
 const vendors_samples = require("../db/vendor_samples.js");
 
 router.post("/vendor/signup", (req, res) => {
-  var reqData = new Vendor(req);
+  var reqData = new Vendor(req.body);
   reqData.save(function (err) {
     if (err) {
       console.log(err)
