@@ -3,8 +3,8 @@ const router = express.Router();
 const { Vendor } = require("../models/Vendors");
 const vendors_samples = require("../db/vendor_samples.js");
 
-router.post("/vendor/vendorlist", (req, res) => {
-  console.log(req.body);
+router.get("/vendor/vendorlist", (req, res) => {
+  console.log(req.query);
   function getDistanceFromLatLngInKm(lat1, lng1, lat2, lng2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -23,13 +23,13 @@ router.post("/vendor/vendorlist", (req, res) => {
     return deg * (Math.PI / 180)
   }
   // 요청 기준 좌표 (default 바닐라코딩)
-  var latTarget = req.body.geolocation.lat;
-  var lngTarget = req.body.geolocation.lng;
+  var latTarget = req.query.lat;
+  var lngTarget = req.query.lng;
   // 요청 거리 (default 1km)
-  var distance = req.body.distance;
+  var distance = req.query.distance;
   // 요청 개수 
-  var startIdx = req.body.startIdx;
-  var endIdx = req.body.endIdx;
+  var startIdx = req.query.startIdx;
+  var endIdx = req.query.endIdx;
   // var result = getDistanceFromLatLngInKm(lat1, lng1, lat2, lng2);
   Vendor.find().then((list) => {
     var filteredList = list.filter((item) => {
