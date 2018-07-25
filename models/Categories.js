@@ -1,14 +1,10 @@
 const mongoose = require("mongoose");
 
 var CategorySchema = new mongoose.Schema({
-  foods: [
+  foodname: { type: String, require: true, unique: true },
+  vendors: [
     {
-      foodname: { type: String, require: true, unique: true },
-      vendors: [
-        {
-          vendor_id: { type: Object, require: true, unique: true }
-        }
-      ]
+      vendor_id: { type: Object, require: true, unique: true }
     }
   ]
 });

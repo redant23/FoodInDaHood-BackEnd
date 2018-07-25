@@ -4,7 +4,6 @@ const { Vendor } = require("../models/Vendors");
 const vendors_samples = require("../db/vendor_samples.js");
 
 router.get("/vendor/vendorlist", (req, res) => {
-  console.log(req.query);
   function getDistanceFromLatLngInKm(lat1, lng1, lat2, lng2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -47,9 +46,9 @@ router.get("/vendor/vendorlist", (req, res) => {
 
     if (filteredList.length) {
       var renderList = filteredList.slice(startIdx, endIdx);
-      renderList.forEach((item) => {
-        console.log(getDistanceFromLatLngInKm(item.lat, item.lng, latTarget, lngTarget))
-      })
+      // renderList.forEach((item) => {
+      //   console.log(getDistanceFromLatLngInKm(item.lat, item.lng, latTarget, lngTarget))
+      // })
       res.json(renderList);
     } else {
       res.send('검색결과가 없습니다.');
