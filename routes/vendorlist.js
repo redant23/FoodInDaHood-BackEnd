@@ -29,7 +29,7 @@ router.get("/vendor/vendorlist", (req, res) => {
   // 요청 개수 
   var startIdx = req.query.startIdx;
   var endIdx = req.query.endIdx;
-  // var result = getDistanceFromLatLngInKm(lat1, lng1, lat2, lng2);
+
   Vendor.find().then((list) => {
     var filteredList = list.filter((item) => {
       var result = getDistanceFromLatLngInKm(latTarget, lngTarget, item.lat, item.lng);

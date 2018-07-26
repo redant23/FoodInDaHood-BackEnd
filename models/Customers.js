@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 
 var CustomerSchema = new mongoose.Schema({
   username: { type: String, require: true },
-  nickname: String,
   email: { type: String, require: true, unique: true, },
   comments: [
     {

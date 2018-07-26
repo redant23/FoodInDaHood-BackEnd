@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { Test } = require("../models/Test");
 
-router.get("/testRequest", (req, res) => {
-  res.send("okhihiQQQ");
+router.post("/testRequest", (req, res) => {
+  console.log(req.file)
+  res.send('hi test')
 });
 
 module.exports = router;

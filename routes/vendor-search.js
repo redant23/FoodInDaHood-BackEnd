@@ -9,7 +9,9 @@ router.get("/vendor/vendor-search", (req, res) => {
   //1.주소
   //2.음식 카테고리
   //3.타이틀명
-  var keyword = '커피'; //req.query.keyword
+  var keyword = req.query.keyword;
+  var startIdx = req.query.startIdx;
+  var endIdx = req.query.endIdx;
   Vendor.find().then(((items) => {
     var locationFilter = items.filter((item) => {
       if (item.address.indexOf(keyword) !== -1) {
@@ -33,7 +35,8 @@ router.get("/vendor/vendor-search", (req, res) => {
             res.json({ "err": "검색결과가 없습니다." });
             return;
           } else {
-            res.json(titleFilter);
+            let renderTitle = titleFilter.slice(startIdx, endIdx);
+            res.json(renderTitle);
             return;
           }
         } else {
@@ -44,18 +47,18 @@ router.get("/vendor/vendor-search", (req, res) => {
               })
               if (hasCategory) return vendor;
             })
-            res.json(categoryFilterResult);
+            let renderCategory = categoryFilterResult.slice(startIdx, endIdx);
+            res.json(renderCategory);
             return;
           });
         }
       })
     } else {
-      res.json(locationFilter);
+      let renderLocation = locationFilter.slice(startIdx, endIdx);
+      res.json(renderLocation);
       return;
     }
   }))
 });
-
-
 
 module.exports = router;
