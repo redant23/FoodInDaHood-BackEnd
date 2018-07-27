@@ -4,9 +4,9 @@
 
 <body>
   <h1>파일 업로드</h1>
-  <form action="http://localhost:5000/api/testRequest" method="POST">
-    <input type="file">
-    <input type="submit" title="이미지업로드">
+  <form action="http://192.168.55.4:5000/api/testRequest" enctype="multipart/form-data" method="POST">
+    <input name="photo" type="file" />
+    <input type="submit" value="이미지업로드" />
   </form>
 </body>
 

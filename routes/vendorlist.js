@@ -45,13 +45,13 @@ router.get("/vendor/vendorlist", (req, res) => {
     });
 
     if (filteredList.length) {
-      var renderList = filteredList.slice(startIdx, endIdx);
+      var vendorList = filteredList.slice(startIdx, endIdx);
       // renderList.forEach((item) => {
       //   console.log(getDistanceFromLatLngInKm(item.lat, item.lng, latTarget, lngTarget))
       // })
-      res.json(renderList);
+      res.json({ vendorList, total: filteredList.length });
     } else {
-      res.send('검색결과가 없습니다.');
+      res.json({ vendorList: filteredList, total: filteredList.length });
     }
   })
 

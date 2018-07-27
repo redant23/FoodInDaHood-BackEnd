@@ -4,13 +4,31 @@ const { Vendor } = require("../models/Vendors");
 const vendors_samples = require("../db/vendor_samples.js");
 
 router.post("/vendor/signup", (req, res) => {
-  var reqData = new Vendor(req.body);
-  reqData.save(function (err) {
-    if (err) {
-      console.log(err)
-    }
-    res.send('success');
-  });
+  // var reqData = new Vendor(req.body);
+  // reqData.save(function (err) {
+  //   if (err) {
+  //     console.log(err)
+  //   }
+  //   res.send('success');
+  // });
+
+  var a = [];
+  vendors_samples.vendors_sampledata.forEach((vendor, i) => {
+
+    var sample = new Vendor(vendor);
+
+    sample.save(function (err) {
+      if (err) {
+        console.log("msg : " + vendor.title + err);
+      } else {
+        a.push(i);
+      }
+      if (a.length === vendors_samples.vendors_sampledata.length) {
+        res.send('success!');
+      }
+    })
+
+  })
 
   // var samples1 = new Vendor(test1);
 
@@ -34,6 +52,7 @@ module.exports = router;
 
 /*
  *   
+ * 
  * var a = [];
   vendors_samples.vendors_sampledata.forEach((vendor, i) => {
 

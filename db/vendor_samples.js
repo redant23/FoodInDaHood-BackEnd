@@ -4531,6 +4531,7 @@ var test = [
   }
 ]
 
+
 var vendors_sampledata = test.map((vendor) => {
   vendor.description = vendor.title + "입니다.";
   vendor.img_url = "https://blog.hmgjournal.com/upload/common/activeSquare/binary/201507021509230_KMPGOPJR.jpg";
@@ -4539,9 +4540,15 @@ var vendors_sampledata = test.map((vendor) => {
   vendor.close_time = new Date(2000, 0, 1, 22, 00);
   vendor.owner = vendor.title.slice(0, 3);
   vendor.favorites = [];
-  vendor.menus = [];
+  vendor.menus = [{
+    name: '떡볶이',
+    price: 3000,
+    description: '떡볶이 1인분, 맵기 조절가능합니다',
+    img_url: 'http://pds25.egloos.com/pds/201212/27/12/c0055612_50dc4c85302b9.jpg'
+  }];
   vendor.categories = [];
   vendor.comments = [];
+  vendor.rate = 5;
   if (!vendor.tel) {
     vendor.tel = "010-5555-6666";
   }
@@ -4556,12 +4563,12 @@ var vendors_sampledata = test.map((vendor) => {
   if (vendor.lat) {
     lat = convertDegree(Number(vendor.lat.split(" ")[1]), Number(vendor.lat.split(" ")[2]), Number(vendor.lat.split(" ")[3]));
   } else {
-    lat = 37.5032229;
+    lat = 37.5263086;
   }
   if (vendor.lng) {
     lng = convertDegree(Number(vendor.lng.split(" ")[1]), Number(vendor.lng.split(" ")[2]), Number(vendor.lng.split(" ")[3]));
   } else {
-    lng = 127.022073;
+    lng = 126.9313937;
   }
   vendor.lat = lat;
   vendor.lng = lng;

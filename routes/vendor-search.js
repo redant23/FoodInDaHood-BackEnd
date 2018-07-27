@@ -9,6 +9,10 @@ router.get("/vendor/vendor-search", (req, res) => {
   //1.주소
   //2.음식 카테고리
   //3.타이틀명
+  if (!req.query.keyword) {
+    res.json({ "err": "검색결과가 없습니다." });
+    return;
+  }
   var keyword = req.query.keyword;
   var startIdx = req.query.startIdx;
   var endIdx = req.query.endIdx;
@@ -36,6 +40,11 @@ router.get("/vendor/vendor-search", (req, res) => {
             return;
           } else {
             let renderTitle = titleFilter.slice(startIdx, endIdx);
+            renderTitle.sort((a, b) => {
+              return (
+                b.rate - a.rate
+              );
+            });
             res.json(renderTitle);
             return;
           }
@@ -54,7 +63,7 @@ router.get("/vendor/vendor-search", (req, res) => {
         }
       })
     } else {
-      let renderLocation = locationFilter.slice(startIdx, endIdx);
+      let renderLocation = locationFilter.slice(); // 10개씩 뿌릴 경우 startIdx, endIdx 넣기
       res.json(renderLocation);
       return;
     }
