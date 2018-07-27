@@ -1,17 +1,17 @@
 const express = require("express");
 const AWS = require('aws-sdk');
+AWS.config.region = "ap-northeast-2";
+var credentials = new AWS.SharedIniFileCredentials({ profile: 'default' });
+AWS.config.credentials = credentials;
 const router = express.Router();
 const { Test } = require("../models/Test");
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const { accessKeyId, secretAccessKey } = require("../db/credentials");
 
-const s3 = new AWS.S3({
-  accessKeyId: accessKeyId,
-  secretAccessKey: secretAccessKey
-});
 
-AWS.config.region = "ap-northeast-2";
+
+const s3 = new AWS.S3();
 
 const upload = multer({
   storage: multerS3({
@@ -23,7 +23,7 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      console.log('key')
+      console.log(file, cb)
       const fileName = `${Date.now().toString()}-${file.originalname}`;
       cb(null, fileName);
     }

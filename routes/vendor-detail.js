@@ -10,45 +10,37 @@ router.get("/vendor/vendor-detail", (req, res) => {
   Vendor.findOne({ _id: targetId }).then(((item) => {
     if (item.food_categories.length || item.comments.length) {
       if (item.food_categories.length) {
-        Category.find().then((categoryItems) => {
-          var foodCategories = categoryItems.map((categoryItem) => {
-            if (categoryItem.vendors.some((vendor) => {
-              return vendor.id === item._id;
-            })) {
-              return categoryItems.foodname;
-            }
-          })
+        Category.find({ vendors: { vendor_id: item._id } }).then((categoryItems) => {
+          var foodCategories = categoryItems;
           if (item.comments.length) {
-            Comment.find().then((CommentItems) => {
-              let comments = CommentItems.map((commentItem) => {
-                if (commentItem.vendor_id === item._id) {
-                  return commentItem;
-                }
-              });
-            })
-            item.food_categories = foodCategories;
-            item.comments = comments;
-            console.log('both', item);
-            res.json(item);
-            return;
+            Comment.find({ vendor_id: item._id }).then((CommentItems) => {
+              let comments = CommentItems;
+              item.food_categories = foodCategories;
+              item.comments = comments;
+              console.log('both', item);
+              res.json(item);
+              return;
+            }).catch((err) => {
+              console.error(err);
+            });
           } else {
             item.food_categories = foodCategories;
             res.json(item);
             console.log('onlyFoodCategories', item);
             return;
           }
+        }).catch((err) => {
+          console.error(err);
         })
       } else if (item.comments.length) {
-        Comment.find().then((CommentItems) => {
-          let comments = CommentItems.map((commentItem) => {
-            if (commentItem.vendor_id === item._id) {
-              return commentItem;
-            }
-          });
+        Comment.find({ vendor_id: item._id }).then((CommentItems) => {
+          let comments = CommentItems;
           item.comments = comments;
           console.log('onlyComments', item);
           res.json(item);
           return;
+        }).catch((err) => {
+          console.error(err);
         })
       }
     } else {
@@ -58,8 +50,9 @@ router.get("/vendor/vendor-detail", (req, res) => {
       res.json(item);
       return;
     }
-
-  }))
+  })).catch((err) => {
+    console.error(err);
+  })
 });
 
 
