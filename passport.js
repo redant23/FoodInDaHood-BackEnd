@@ -1,7 +1,7 @@
 const passport = require("passport");
 const FacebookTokenStrategy = require("passport-facebook-token");
 const { Customer } = require("./models/Customers");
-const { FBClientID, FBClientSecret } = require("./credentials");
+const { FBClientID, FBClientSecret } = require("./db/credentials");
 
 module.exports = () => {
   passport.use(

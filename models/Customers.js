@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 var CustomerSchema = new mongoose.Schema({
+  facebookProviderId: String,
   username: { type: String, require: true },
   email: { type: String, require: true, unique: true },
+  picture: String,
   comments: [
     {
       comment_id: { type: Object, require: true, unique: true }
@@ -21,16 +23,19 @@ CustomerSchema.statics.findOrCreate = function (
   var that = this;
   return this.findOne(
     {
-      "facebookProvider.id": profile.id
+      "facebookProviderId": profile.id
     },
     function (err, customer) {
       // no customer was found, lets create a new one
       console.log(333333333);
       if (!customer) {
         console.log(444444444);
+        console.log(profile);
         var newCustomer = new that({
+          facebookProviderId: profile.id,
           username: profile.displayName,
           email: profile.emails[0].value,
+          picture: profile.photos[0].value,
           comments: [],
           my_favorite_trucks: []
         });
