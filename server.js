@@ -13,12 +13,12 @@ const { mongoose } = require("./db/mongoose");
 const passport = require("passport");
 const path = require("path");
 const app = express();
-
+app.options("*", cors());
+app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 require("./passport.js")(passport);
 
-app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

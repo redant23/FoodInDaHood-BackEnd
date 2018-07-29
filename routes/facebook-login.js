@@ -1,35 +1,54 @@
 const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
+var jwt = require("jsonwebtoken");
 // const strategy = require('../passport');
 const { Customer } = require("../models/Customers");
-const FacebookStrategy = require('passport-facebook').Strategy;
-const FacebookTokenStrategy = require('passport-facebook-token');
+const FacebookStrategy = require("passport-facebook").Strategy;
+const FacebookTokenStrategy = require("passport-facebook-token");
 
-passport.use(new FacebookTokenStrategy({ // local 전략을 세움
-  clientID: '2171887249551647',
-  clientSecret: '616de2413c7086c4cfa3520ac67005a4',
-}, (accessToken, refreshToken, profile, done) => {
-  console.log('11')
-  Customer.findOne({ id: profile.id }, (err, user) => {
-    console.log('22')
-    if (user) return done(err, user); // 회원정보가 있으면 로그인
-    const newCustomer = new Customer({
-      id: profile.id
-    });
-    newCustomer.save((user) => {
-      console.log('33')
-      return done(null, user); // 새로운 회원 생성 후 로그인
-    })
+router.post(
+  "/auth/facebook",
+  passport.authenticate("facebook-token", { session: false }),
+  function (req, res, next) {
+    if (!req.user) {
+      return res.send(401, "User Not Authenticated");
+    }
 
-  });
-}));
+    req.auth = {
+      id: req.user.id
+    };
 
+    next();
+  },
+  generateToken,
+  sendToken
+);
 
-router.post("/auth/facebook", passport.authenticate('facebook'), function (req, res) {
-  console.log('ss')
-  res.send('req.body');
-});
+var createToken = function (auth) {
+  return jwt.sign(
+    {
+      id: auth.id
+    },
+    "my-secret",
+    {
+      expiresIn: 60 * 120
+    }
+  );
+};
 
+function generateToken(req, res, next) {
+  console.log(888888);
+  req.token = createToken(req.auth);
+  return next();
+}
+
+function sendToken(req, res) {
+  console.log(999999);
+  res.header("x-auth-token", req.token);
+  console.log(req.token);
+  console.log(req.user);
+  return res.json({ user: req.user, token: req.token });
+}
 
 module.exports = router;

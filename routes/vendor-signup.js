@@ -14,7 +14,6 @@ router.post("/vendor/signup", (req, res) => {
 
   var a = [];
   vendors_samples.vendors_sampledata.forEach((vendor, i) => {
-
     var sample = new Vendor(vendor);
 
     sample.save(function (err) {
@@ -24,11 +23,10 @@ router.post("/vendor/signup", (req, res) => {
         a.push(i);
       }
       if (a.length === vendors_samples.vendors_sampledata.length) {
-        res.send('success!');
+        res.send("success!");
       }
-    })
-
-  })
+    });
+  });
 
   // var samples1 = new Vendor(test1);
 
@@ -43,32 +41,23 @@ router.post("/vendor/signup", (req, res) => {
   //       console.log(err, 22)
   //     }
 
-
   // res.send({ samples1, samples2, samples3 })
 });
 
-
 module.exports = router;
 
-/*
- *   
- * 
- * var a = [];
-  vendors_samples.vendors_sampledata.forEach((vendor, i) => {
+// var a = [];
+// vendors_samples.vendors_sampledata.forEach((vendor, i) => {
+//   var sample = new Vendor(vendor);
 
-    var sample = new Vendor(vendor);
-
-    sample.save(function (err) {
-      if (err) {
-        console.log("msg : " + vendor.title + err);
-      } else {
-        a.push(i);
-      }
-      if (a.length === vendors_samples.vendors_sampledata.length) {
-        res.send('success!');
-      }
-    })
-
-  })
- * 
- */
+//   sample.save(function(err) {
+//     if (err) {
+//       console.log("msg : " + vendor.title + err);
+//     } else {
+//       a.push(i);
+//     }
+//     if (a.length === vendors_samples.vendors_sampledata.length) {
+//       res.send("success!");
+//     }
+//   });
+// });
