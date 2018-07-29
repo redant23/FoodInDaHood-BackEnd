@@ -7,10 +7,14 @@ var CustomerSchema = new mongoose.Schema({
   picture: String,
   comments: [
     {
-      comment_id: { type: Object, require: true, unique: true }
+      comment_id: { type: Object, require: true }
     }
   ],
-  my_favorite_trucks: [{ type: String, require: true }]
+  my_favorite_trucks: [
+    {
+      vendor_id: { type: Object, require: true }
+    }
+  ]
 });
 
 CustomerSchema.statics.findOrCreate = function (

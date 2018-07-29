@@ -14,7 +14,11 @@ var VendorSchema = new mongoose.Schema({
   join_date: { type: Date, require: true },
   open_time: { type: Date, require: true },
   close_time: { type: Date, require: true },
-  favorites: [{ type: String, require: true }],
+  favorites: [
+    {
+      customer_id: { type: Object, require: true }
+    }
+  ],
   rate: { type: Number },
   food_categories: [
     {

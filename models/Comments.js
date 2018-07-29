@@ -8,6 +8,8 @@ var CommentSchema = new mongoose.Schema({
   rate: { type: Number, require: true },
   created_at: { type: Date, require: true },
   img_url: String,
+  customer_name: String,
+  customer_imgUrl: String,
 });
 
 var Comment = mongoose.model("Comment", CommentSchema);
