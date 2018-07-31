@@ -9,7 +9,7 @@ var credentials = new AWS.SharedIniFileCredentials({ profile: 'default' });
 AWS.config.credentials = credentials;
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-
+const { ObjectId } = require('mongodb');
 
 const s3 = new AWS.S3();
 
@@ -63,16 +63,100 @@ router.post("/vendor/signup/category/add", (req, res) => {
 });
 
 // 가게 등록
-router.post("/vendor/signup/add", upload.fields([{ name: 'menuImg' }, { name: 'vendorImg' }]), (req, res) => {
-  var reqData = new Vendor(req.body);
+router.post("/vendor/signup/add", upload.fields([{ name: 'image' }, { name: 'menuPhoto' }]), (req, res) => {
+
   console.log(req.files, req.body, "testpoint");
-  reqData.save(function (err) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.json({ msg: 'success' });
-    }
-  });
+  console.log(JSON.parse(req.body.menu))
+
+  var menuArr = JSON.parse(req.body.menu).map((menu, i) => {
+    console.log('menu', menu)
+    menu.img_url = req.files.menuPhoto[i].location;
+    return menu;
+  })
+
+  console.log('menuArr', menuArr);
+
+  var food_categories_data = JSON.parse(req.body.foodCategory);
+
+  var newData = {
+    title: req.body.title,
+    description: req.body.description,
+    permission_no: req.body.permissionNumber,
+    address: req.body.address,
+    lat: Number(req.body.lat),
+    lng: Number(req.body.lng),
+    tel: req.body.phoneNumber,
+    owner: req.body.owner,
+    join_date: req.body.joinDate,
+    open_time: new Date(2000, 0, 1, req.body.openTime.split(":")[0], req.body.openTime.split(":")[1]),
+    close_time: new Date(2000, 0, 1, req.body.closeTime.split(":")[0], req.body.closeTime.split(":")[1]),
+    img_url: req.files.image[0].location,
+    menus: menuArr,
+    food_categories: []
+  };
+
+  var renderData = new Vendor(newData);
+  var willSavedatas = [];
+  food_categories_data.forEach((food_category, idx) => {
+    Category.findOne({ foodname: food_category }).then((item) => {
+      if (item) {
+        renderData.food_categories.push(item._id);
+        item.vendors.push(renderData._id);
+        item.save((err) => {
+          if (err) {
+            console.log("msg : " + err);
+            res.json({ msg: err });
+          }
+        });
+        if (food_categories_data.length - 1 === idx) {
+          renderData.save((err) => {
+            if (err) {
+              console.log("msg : " + err);
+              res.json({ msg: err });
+            } else {
+              res.json({ msg: 'success1!' });
+            }
+          })
+        }
+      } else {
+        var categoryAddData = {
+          foodname: food_category,
+          vendors: []
+        }
+        var categoryAdd = new Category(categoryAddData);
+        categoryAdd.vendors.push(ObjectId(renderData._id));
+        renderData.food_categories.push(categoryAdd._id);
+        willSavedatas.push(categoryAdd);
+        if (idx === food_categories_data.length - 1) {
+          renderData.save((err) => {
+            if (err) {
+              console.log("msg : " + err);
+              res.json({ msg: err });
+            } else {
+              willSavedatas.forEach((categoryData, i) => {
+                categoryData.save((err) => {
+                  if (err) {
+                    console.log("msg : " + err);
+                    res.json({ msg: err });
+                  }
+                  if (willSavedatas.length - 1 === i) {
+                    res.json({ msg: 'success2!' });
+                  }
+                })
+              })
+            }
+          })
+
+        }
+      }
+    }).catch((err) => {
+      res.json({ msg: err });
+    });
+  })
+
+
+
+
 });
 
 // var samples1 = new Vendor(test1);

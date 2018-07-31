@@ -27,13 +27,7 @@ var VendorSchema = new mongoose.Schema({
     }
   ],
   menus: [
-    {
-      name: { type: String, require: true },
-      price: { type: String, require: true },
-      description: { type: String, require: true },
-      img_url: { type: String, require: true },
-      is_main_menu: { type: Boolean, require: true },
-    }
+
   ],
   comments: [
     {
