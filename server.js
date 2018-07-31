@@ -5,7 +5,6 @@ const test = require("./routes/test");
 
 const vendorSignup = require("./routes/vendor-signup");
 const vendorlist = require("./routes/vendorlist");
-const vendorDetail = require("./routes/vendor-detail");
 const vendorSearch = require("./routes/vendor-search");
 const facebookLogin = require("./routes/facebook-login");
 
@@ -25,7 +24,6 @@ app.use(bodyParser.json());
 app.use("/api", test);
 app.use("/api", vendorSignup);
 app.use("/api", vendorlist);
-app.use("/api", vendorDetail);
 app.use("/api", vendorSearch);
 
 app.use("/api", facebookLogin);

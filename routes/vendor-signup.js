@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Vendor } = require("../models/Vendors");
+const { Category } = require("../models/Categories");
 const vendors_samples = require("../db/vendor_samples.js");
 const AWS = require('aws-sdk');
 AWS.config.region = "ap-northeast-2";
@@ -29,9 +30,42 @@ const upload = multer({
   })
 });
 
+// 가게 등록 페이지 로드
+router.get("/vendor/signup", (req, res) => {
+  Category.find().then((item) => {
+    res.json(item);
+  });
+});
+
+// 카테고리 추가
+router.post("/vendor/signup/category/add", (req, res) => {
+  //req.body.foodname
+  Category.find({ foodname: req.body.foodname }).then((items) => {
+    if (!Object.keys(items).length) {
+      var data = {
+        foodname: req.body.foodname,
+        vendors: []
+      }
+      var addCategory = new Category(data);
+      console.log(addCategory);
+      addCategory.save((err) => {
+        if (err) {
+          console.log("msg : " + err);
+          res.json({ msg: err });
+        } else {
+          res.json(data);
+        }
+      })
+    } else {
+      res.json({ msg: '기존 카테고리에 이미 있습니다.' })
+    }
+  });
+});
+
 // 가게 등록
-router.post("/vendor/signup", upload.fields([{}]), (req, res) => {
+router.post("/vendor/signup/add", upload.fields([{ name: 'menuImg' }, { name: 'vendorImg' }]), (req, res) => {
   var reqData = new Vendor(req.body);
+  console.log(req.files, req.body, "testpoint");
   reqData.save(function (err) {
     if (err) {
       console.log(err)

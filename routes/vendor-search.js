@@ -10,18 +10,22 @@ router.get("/vendor/vendor-search", (req, res) => {
   //2.음식 카테고리
   //3.타이틀명
   if (!req.query.keyword) {
-    res.json({ "err": "검색결과가 없습니다." });
+    res.json({ "err": "검색에 필요한 키워드가 없습니다." });
     return;
   }
-  var keyword = req.query.keyword;
-  var startIdx = req.query.startIdx;
-  var endIdx = req.query.endIdx;
+  console.log('before', req.query.keyword);
+  var keyword = decodeURI(req.query.keyword);
+  console.log('after', keyword);
+  // var startIdx = req.query.startIdx;
+  // var endIdx = req.query.endIdx;
   Vendor.find().then(((items) => {
+
     var locationFilter = items.filter((item) => {
       if (item.address.indexOf(keyword) !== -1) {
         return item;
       }
     });
+
     if (!locationFilter.length) {
       Category.find().then((categoryItems) => {
         var categoryFilter = categoryItems.filter((categoryItem) => {
@@ -32,14 +36,15 @@ router.get("/vendor/vendor-search", (req, res) => {
         if (!categoryFilter.length) {
           var titleFilter = items.filter((item) => {
             if (item.title.indexOf(keyword) !== -1) {
+              console.log('catch', keyword);
               return item;
             }
           })
           if (!titleFilter.length) {
-            res.json({ "err": "검색결과가 없습니다." });
+            res.json({ "err": "타이틀 검색결과가 없습니다." });
             return;
           } else {
-            let renderTitle = titleFilter.slice(startIdx, endIdx);
+            let renderTitle = titleFilter.slice();
             renderTitle.sort((a, b) => {
               return (
                 b.rate - a.rate
@@ -56,7 +61,7 @@ router.get("/vendor/vendor-search", (req, res) => {
               })
               if (hasCategory) return vendor;
             })
-            let renderCategory = categoryFilterResult.slice(startIdx, endIdx);
+            let renderCategory = categoryFilterResult.slice();
             res.json(renderCategory);
             return;
           });

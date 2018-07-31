@@ -34,6 +34,26 @@ const upload = multer({
   })
 });
 
+
+router.get("/category/list", (req, res) => {
+  var targetId = req.query.vendorId;
+  Category.find({ vendor_id: targetId }).then(items => {
+    res.json(items);
+  }).catch(err => {
+    console.error(err);
+  });
+});
+
+router.get("/comment/list", (req, res) => {
+  var targetId = req.query.vendorId;
+  Comment.find({ vendor_id: ObjectId(targetId) }).then(items => {
+    res.json(items);
+  }).catch(err => {
+    console.log(err);
+    console.error(err);
+  });
+});
+
 router.post("/comment/new", upload.single('comment_img'), (req, res) => {
   console.log(req.body);
   console.log(req.file);
@@ -56,7 +76,6 @@ router.post("/comment/new", upload.single('comment_img'), (req, res) => {
     customer_name: customerName,
     customer_imgUrl: customerImgUrl
   }
-
 
   var newComment = new Comment(data);
   newComment.save((err) => {
@@ -89,44 +108,31 @@ router.post("/comment/new", upload.single('comment_img'), (req, res) => {
   })
 });
 
-router.get("/comment/list", (req, res) => {
-  var targetId = req.query.vendorId;
-  Comment.find({ vendor_id: ObjectId(targetId) }).then(items => {
-    res.json(items);
-  }).catch(err => {
-    console.log(err);
-    console.error(err);
-  });
-});
-
-router.get("/category/list", (req, res) => {
-  var targetId = req.query.vendorId;
-  Category.find({ vendor_id: targetId }).then(items => {
-    res.json(items);
-  }).catch(err => {
-    console.error(err);
-  });
-});
-
-router.get("/customer/mycomments", (req, res) => {
-  var targetId = req.query.customerId;
-  Customer.find({ Customer_id: targetId }).then(items => {
-    var renderlist = {
-      comments: items.comments,
-    }
-    res.json(renderlist);
-  }).catch(err => {
-    console.error(err);
-  });
-});
-
 router.get("/customer/myfavoritetrucks", (req, res) => {
   var targetId = req.query.customerId;
-  Customer.find({ Customer_id: targetId }).then(items => {
-    var renderlist = {
-      my_favorite_trucks: items.my_favorite_trucks
+  Customer.find({ _id: ObjectId(targetId) }).then(items => {
+    if (items.length) {
+      var customerVendorlist = items[0].my_favorite_trucks;
+      var resultArr = [];
+      Vendor.find().then((vendorItems) => {
+        vendorItems.forEach((vItem) => {
+          customerVendorlist.forEach((cvItem) => {
+            if (vItem._id.toString() === cvItem._id.toString()) {
+              resultArr.push(vItem);
+            }
+          });
+        });
+        if (resultArr.length) {
+          res.json(resultArr);
+        } else {
+          res.json({ msg: '현재 즐겨찾는 트럭이 없군요.' });
+        }
+      }).catch((err) => {
+        res.json({ msg: err });
+      })
+    } else {
+      res.json({ msg: '아이디에 오류가 있습니다.' })
     }
-    res.json(renderlist);
   }).catch(err => {
     console.error(err);
   });
@@ -163,7 +169,6 @@ router.post("/favorite/add", (req, res) => {
 });
 
 router.post("/favorite/remove", (req, res) => {
-
   var customerId = req.body.customerId;
   var vendorId = req.body.vendorId;
   Vendor.findOne({ _id: ObjectId(vendorId) }).then((vendorItem) => {
@@ -204,6 +209,36 @@ router.post("/favorite/remove", (req, res) => {
   })
 });
 
+router.get("/vendor/vendor-detail", (req, res) => {
+  var targetId = req.query.vendorId;
+  Vendor.findOne({ _id: ObjectId(targetId) }).then((item) => {
+    console.log('item', item);
+    if (item.food_categories.length) {
+      console.log("oid", ObjectId(targetId));
+      Category.find().then((results) => {
+        var resultArr = [];
+        results.forEach((result) => {
+          if (result.vendors.some((vendor) => {
+            return vendor._id.toString() === targetId;
+          })) {
+            resultArr.push(result);
+          }
+        })
+        item.food_categories_info = resultArr;
+        console.log('resultArr', resultArr);
+        res.json(item);
+        return;
+      }).catch((err) => {
+        res.json({ msg: err });
+      })
+    } else {
+      res.json(item);
+    }
+  })
+    .catch((err) => {
+      res.json({ msg: err });
+    });
+});
 
 router.post("/testRequest", upload.single('photo'), (req, res) => {
   console.log('testRequest')
