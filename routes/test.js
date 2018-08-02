@@ -14,7 +14,6 @@ const multerS3 = require('multer-s3');
 const { accessKeyId, secretAccessKey } = require("../db/credentials");
 const { ObjectId } = require('mongodb');
 
-
 const s3 = new AWS.S3();
 
 const upload = multer({
@@ -245,5 +244,55 @@ router.post("/testRequest", upload.single('photo'), (req, res) => {
   console.log(req.file)
   res.send('hi test');
 });
+
+router.get("/addCategory", (req, res) => {
+  console.log('here');
+  res.json(req.query);
+
+  // Vendor.findById(target).then((targetItem) => {
+  //   targetItem.menus.push(menuDatas);
+  //   targetItem.save((err) => {
+  //     if (err) {
+  //       console.log("msg : " + err);
+  //       res.json({ msg: err });
+  //     } else {
+  //       res.json({ msg: 'success add menu' });
+  //     }
+  //   })
+  // }).catch((err) => {
+  //   res.json({ msg: err });
+  // })
+});
+
+
+router.post("/vendor/addmenu", upload.single('menuimage'), (req, res) => {
+  var target = req.body.vendorId;
+  var checkbox = false;
+  if (req.body.ismainmenu === 'on') {
+    checkbox = true;
+  }
+  var menuDatas = {
+    name: req.body.menuname,
+    price: req.body.menuprice,
+    description: req.body.menudescription,
+    img_url: req.file.location,
+    is_main_menu: checkbox
+  }
+  Vendor.findById(target).then((targetItem) => {
+    targetItem.menus.push(menuDatas);
+    targetItem.save((err) => {
+      if (err) {
+        console.log("msg : " + err);
+        res.json({ msg: err });
+      } else {
+        res.json({ msg: 'success add menu' });
+      }
+    })
+  }).catch((err) => {
+    res.json({ msg: err });
+  })
+});
+
+
 
 module.exports = router;

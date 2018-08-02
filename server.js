@@ -12,14 +12,24 @@ const { mongoose } = require("./db/mongoose");
 const passport = require("passport");
 const path = require("path");
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ type: 'application/*+json' }))
+app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
+app.use(bodyParser.text({ type: 'text/html' }))
+
 app.options("*", cors());
 app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 require("./passport.js")(passport);
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
+// // parse some custom thing into a Buffer
+
+
+// // parse an HTML body into a string
+
 
 app.use("/api", test);
 app.use("/api", vendorSignup);
