@@ -14,9 +14,8 @@ const path = require("path");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ type: 'application/*+json' }))
-app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
-app.use(bodyParser.text({ type: 'text/html' }))
+app.use(bodyParser.json());
+
 
 app.options("*", cors());
 app.use(cors());
