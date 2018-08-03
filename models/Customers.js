@@ -23,7 +23,6 @@ CustomerSchema.statics.findOrCreate = function (
   profile,
   cb
 ) {
-  console.log(2222222222);
   var that = this;
   return this.findOne(
     {
@@ -31,9 +30,7 @@ CustomerSchema.statics.findOrCreate = function (
     },
     function (err, customer) {
       // no customer was found, lets create a new one
-      console.log(333333333);
       if (!customer) {
-        console.log(444444444);
         console.log(profile);
         var newCustomer = new that({
           facebookProviderId: profile.id,
@@ -45,14 +42,12 @@ CustomerSchema.statics.findOrCreate = function (
         });
 
         newCustomer.save(function (error, savedcustomer) {
-          console.log(5555555);
           if (error) {
             console.log(error);
           }
           return cb(error, savedcustomer);
         });
       } else {
-        console.log(6666666);
         return cb(err, customer);
       }
     }

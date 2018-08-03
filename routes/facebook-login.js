@@ -38,16 +38,12 @@ var createToken = function (auth) {
 };
 
 function generateToken(req, res, next) {
-  console.log(888888);
   req.token = createToken(req.auth);
   return next();
 }
 
 function sendToken(req, res) {
-  console.log(999999);
   res.header("x-auth-token", req.token);
-  console.log(req.token);
-  console.log(req.user);
   return res.json({ user: req.user, token: req.token });
 }
 

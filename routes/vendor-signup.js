@@ -19,11 +19,9 @@ const upload = multer({
     bucket: 'foodindahood',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: function (req, file, cb) {
-      console.log('metadata')
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      console.log(file, cb)
       const fileName = `${Date.now().toString()}-${file.originalname}`;
       cb(null, fileName);
     }
@@ -47,7 +45,6 @@ router.post("/vendor/signup/category/add", (req, res) => {
         vendors: []
       }
       var addCategory = new Category(data);
-      console.log(addCategory);
       addCategory.save((err) => {
         if (err) {
           console.log("msg : " + err);
@@ -65,16 +62,10 @@ router.post("/vendor/signup/category/add", (req, res) => {
 // 가게 등록
 router.post("/vendor/signup/add", upload.fields([{ name: 'image' }, { name: 'menuPhoto' }]), (req, res) => {
 
-  console.log(req.files, req.body, "testpoint");
-  console.log(JSON.parse(req.body.menu))
-
   var menuArr = JSON.parse(req.body.menu).map((menu, i) => {
-    console.log('menu', menu)
     menu.img_url = req.files.menuPhoto[i].location;
     return menu;
   })
-
-  console.log('menuArr', menuArr);
 
   var food_categories_data = JSON.parse(req.body.foodCategory);
 
@@ -153,10 +144,6 @@ router.post("/vendor/signup/add", upload.fields([{ name: 'image' }, { name: 'men
       res.json({ msg: err });
     });
   })
-
-
-
-
 });
 
 // var samples1 = new Vendor(test1);

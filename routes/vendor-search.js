@@ -13,9 +13,9 @@ router.get("/vendor/vendor-search", (req, res) => {
     res.json({ "err": "검색에 필요한 키워드가 없습니다." });
     return;
   }
-  console.log('before', req.query.keyword);
+
   var keyword = decodeURI(req.query.keyword);
-  console.log('after', keyword);
+
   // var startIdx = req.query.startIdx;
   // var endIdx = req.query.endIdx;
   Vendor.find().then(((items) => {
@@ -36,7 +36,6 @@ router.get("/vendor/vendor-search", (req, res) => {
         if (!categoryFilter.length) {
           var titleFilter = items.filter((item) => {
             if (item.title.indexOf(keyword) !== -1) {
-              console.log('catch', keyword);
               return item;
             }
           })

@@ -1,3 +1,7 @@
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -39,6 +43,18 @@ app.use("/api", facebookLogin);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}!`);
+console.log('port', process.env.PORT);
+// app.listen(PORT, () => {
+//   console.log(`Server started on port ${PORT}!`);
+// });
+
+const httpServer = http.createServer(app);
+// const httpsServer = https.createServer(options, app);
+
+httpServer.listen(PORT, () => {
+  console.log(`http Server started on port ${PORT}`);
 });
+
+// httpsServer.listen(PORT, () => {
+//   console.log(`https Server started on port ${PORT}`);
+// });
