@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.9.4
+    working_directory: ~/FoodInDaHood-BackEnd
+    steps:
+      - checkout
+
+      - run: npm install
+
+      - run:
+          name: Show Current Branch
+          command: echo ${CIRCLE_BRANCH}
