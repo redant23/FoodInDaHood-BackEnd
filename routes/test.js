@@ -13,7 +13,10 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const { ObjectId } = require('mongodb');
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  accessKeyId: process.env.API_ACCESS_KEY_ID,
+  secretAccessKey: process.env.API_SECRET_ACCESS_KEY
+});
 
 const upload = multer({
   storage: multerS3({
