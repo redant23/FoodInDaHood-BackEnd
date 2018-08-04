@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { dbuser, dbpassword } = require("./credentials");
 
 mongoose.Promise = global.Promise;
 
