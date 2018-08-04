@@ -11,7 +11,6 @@ const { Vendor } = require("../models/Vendors");
 const { Category } = require("../models/Categories");
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-const { accessKeyId, secretAccessKey } = require("../db/credentials");
 const { ObjectId } = require('mongodb');
 
 const s3 = new AWS.S3();
